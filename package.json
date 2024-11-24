@@ -1,0 +1,17 @@
+{
+  "name": "learn-sessions",
+  "private": true,
+  "license": "MIT",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
