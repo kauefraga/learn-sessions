@@ -5,8 +5,8 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node .",
-    "dev": "tsx watch src/server.ts",
+    "start": "node --env-file=.env .",
+    "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsup src/"
   },
   "devDependencies": {
