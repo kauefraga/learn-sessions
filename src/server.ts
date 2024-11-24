@@ -1,6 +1,11 @@
 import fastify from 'fastify';
+import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
 
 const http = fastify();
+
+http.register(cors);
+http.register(helmet)
 
 http.get('/status', () => ({ ok: true }))
 
