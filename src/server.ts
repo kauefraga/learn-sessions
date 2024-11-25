@@ -4,6 +4,7 @@ import helmet from '@fastify/helmet';
 import { z } from 'zod';
 import { db } from './database/index.js';
 import { session, user } from './database/schema.js';
+import { eq } from 'drizzle-orm';
 import cookie from '@fastify/cookie';
 
 const http = fastify();
@@ -28,6 +29,8 @@ http.post('/v1/user/create', async (request, reply) => {
 
   // user already exists?
 
+  // TODO PASSWORD HASHING
+
   const [newUser] = await db
     .insert(user)
     .values(userData)
@@ -51,8 +54,33 @@ http.post('/v1/user/create', async (request, reply) => {
 });
 // http.post('/v1/user/auth', (request, reply) => {});
 
-// If user is authenticated, then they can see other users :)
-// FIRST http.get('/v1/users', (request, reply) => {});
+// TODO PAGINATION
+// TODO VIEW/HTML
+http.get('/v1/users', async (request, reply) => {
+  const sessionId = request.cookies.sessionId;
+
+  if (!sessionId) {
+    return reply.status(401).send({
+      message: 'Authentication is required.'
+    });
+  }
+
+  const [userSession] = await db
+    .select()
+    .from(session)
+    .where(eq(session.id, sessionId))
+    .limit(1);
+
+  if (!userSession) {
+    return reply.status(401).send({
+      message: 'Invalid session.'
+    });
+  }
+
+  const users = await db.select().from(user);
+
+  return reply.send(users);
+});
 
 http.listen({ port: 3333 })
   .then(() => console.log(':> server is running at http://localhost:3333/'));
