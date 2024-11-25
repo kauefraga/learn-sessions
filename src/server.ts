@@ -7,6 +7,7 @@ import { session, user } from './database/schema.js';
 import { eq } from 'drizzle-orm';
 import cookie from '@fastify/cookie';
 import argon2 from 'argon2';
+import { AuthUser } from './auth.js';
 
 const http = fastify();
 
@@ -64,23 +65,11 @@ http.post('/v1/user/create', async (request, reply) => {
 // TODO PAGINATION
 // TODO VIEW/HTML
 http.get('/v1/users', async (request, reply) => {
-  const sessionId = request.cookies.sessionId;
+  const session = await AuthUser(request, db);
 
-  if (!sessionId) {
+  if (!session) {
     return reply.status(401).send({
-      message: 'Authentication is required.'
-    });
-  }
-
-  const [userSession] = await db
-    .select()
-    .from(session)
-    .where(eq(session.id, sessionId))
-    .limit(1);
-
-  if (!userSession) {
-    return reply.status(401).send({
-      message: 'Invalid session.'
+      message: 'Invalid session.',
     });
   }
 
