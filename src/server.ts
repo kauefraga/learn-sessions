@@ -3,13 +3,16 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import { z } from 'zod';
 import { db } from './database/index.js';
-import { user } from './database/schema.js';
-import { eq } from 'drizzle-orm';
+import { session, user } from './database/schema.js';
+import cookie from '@fastify/cookie';
 
 const http = fastify();
 
 http.register(cors);
 http.register(helmet);
+http.register(cookie, {
+  secret: process.env.COOKIE_SECRET!
+});
 
 http.get('/status', () => ({ ok: true }));
 
@@ -30,7 +33,21 @@ http.post('/v1/user/create', async (request, reply) => {
     .values(userData)
     .returning();
 
-  return reply.status(201).send(newUser);
+  const [userSession] = await db
+    .insert(session)
+    .values({
+      userId: newUser.id
+    })
+    .returning({
+      id: session.id
+    });
+
+  return reply
+    .cookie('sessionId', userSession.id, {
+      signed: true
+    })
+    .status(201)
+    .send(newUser);
 });
 // http.post('/v1/user/auth', (request, reply) => {});
 
