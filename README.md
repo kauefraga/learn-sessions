@@ -1,5 +1,9 @@
 # Learn sessions
 
+[![Bluesky: @kauefraga.dev](https://img.shields.io/badge/bluesky-%40kauefraga.dev-blue)](https://bsky.app/profile/kauefraga.dev)
+[![Dev.to: kauefraga](https://img.shields.io/badge/dev.to-kauefraga-242424)](https://dev.to/kauefraga)
+[![Last commit](https://img.shields.io/github/last-commit/kauefraga/learn-sessions/main)](https://github.com/kauefraga/learn-sessions/commits/main)
+
 Inspired by the article ["Stop using JWT for sessions"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/) (yes, http), here's an implementation on sessions with TypeScript, Fastify & Drizzle ORM.
 
 This repository aims to explain the **concepts of sessions** and provide a **simple implementation**.
