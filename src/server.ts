@@ -6,6 +6,7 @@ import { db } from './database/index.js';
 import { session, user } from './database/schema.js';
 import { eq } from 'drizzle-orm';
 import cookie from '@fastify/cookie';
+import argon2 from 'argon2';
 
 const http = fastify();
 
@@ -29,11 +30,14 @@ http.post('/v1/user/create', async (request, reply) => {
 
   // user already exists?
 
-  // TODO PASSWORD HASHING
+  const password = await argon2.hash(userData.password);
 
   const [newUser] = await db
     .insert(user)
-    .values(userData)
+    .values({
+      ...userData,
+      password,
+    })
     .returning();
 
   const [userSession] = await db
@@ -50,7 +54,10 @@ http.post('/v1/user/create', async (request, reply) => {
       signed: true
     })
     .status(201)
-    .send(newUser);
+    .send({
+      ...newUser,
+      password: undefined
+    });
 });
 // http.post('/v1/user/auth', (request, reply) => {});
 
