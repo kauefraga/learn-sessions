@@ -63,7 +63,6 @@ http.post('/v1/user/create', async (request, reply) => {
 // http.post('/v1/user/auth', (request, reply) => {});
 
 // TODO PAGINATION
-// TODO VIEW/HTML
 http.get('/v1/users', async (request, reply) => {
   const session = await AuthUser(request, db);
 
@@ -73,7 +72,13 @@ http.get('/v1/users', async (request, reply) => {
     });
   }
 
-  const users = await db.select().from(user);
+  const users = await db.select({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    displayName: user.displayName,
+    createdAt: user.createdAt
+  }).from(user);
 
   return reply.send(users);
 });
