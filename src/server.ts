@@ -60,25 +60,31 @@ http.post('/v1/user/create', async (request, reply) => {
       password: undefined
     });
 });
+
 // http.post('/v1/user/auth', (request, reply) => {});
+// http.post('/v1/user/logout', (request, reply) => {});
 
 // TODO PAGINATION
 http.get('/v1/users', async (request, reply) => {
-  const session = await AuthUser(request, db);
+  const userSession = await AuthUser(request, db);
 
-  if (!session) {
+  if (!userSession) {
     return reply.status(401).send({
       message: 'Invalid session.',
     });
   }
 
-  const users = await db.select({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    displayName: user.displayName,
-    createdAt: user.createdAt
-  }).from(user);
+  const users = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      displayName: user.displayName,
+      createdAt: user.createdAt,
+      sessionId: session.id,
+    })
+    .from(user)
+    .leftJoin(session, eq(session.userId, user.id));
 
   return reply.send(users);
 });
