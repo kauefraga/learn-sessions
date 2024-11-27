@@ -8,8 +8,6 @@ Inspired by the article ["Stop using JWT for sessions"](http://cryto.net/~joepie
 
 This repository aims to explain the **concepts of sessions** and provide a **simple implementation**, so you have a solid start point.
 
-[Jump to the concepts](#-concepts)
-
 ## 🔥 Features
 
 - [x] Simple specification: create user, authenticate user, log out user and fetch users (authorization required)
