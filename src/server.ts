@@ -8,13 +8,14 @@ import { eq } from 'drizzle-orm';
 import cookie from '@fastify/cookie';
 import argon2 from 'argon2';
 import { AuthUser } from './auth.js';
+import { env } from './env.js';
 
 const http = fastify();
 
 http.register(cors);
 http.register(helmet);
 http.register(cookie, {
-  secret: process.env.COOKIE_SECRET!
+  secret: env.COOKIE_SECRET
 });
 
 http.get('/status', () => ({ ok: true }));
