@@ -52,7 +52,10 @@ http.post('/v1/user/create', async (request, reply) => {
 
   return reply
     .cookie('sessionId', userSession.id, {
-      signed: true
+      signed: true,
+      httpOnly: true,
+      // magic numbers: one day (24h) in milliseconds
+      maxAge: new Date().getTime() + 1000 * 60 * 60 * 24
     })
     .status(201)
     .send({
@@ -109,7 +112,10 @@ http.post('/v1/user/auth', async (request, reply) => {
 
   return reply
     .cookie('sessionId', newSession.id, {
-      signed: true
+      signed: true,
+      httpOnly: true,
+      // magic numbers: one day (24h) in milliseconds
+      maxAge: new Date().getTime() + 1000 * 60 * 60 * 24
     })
     .status(201)
     .send(newSession);

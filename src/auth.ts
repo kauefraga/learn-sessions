@@ -24,5 +24,12 @@ export async function AuthUser(request: FastifyRequest, db: NodePgDatabase) {
     return;
   }
 
+  const timeSinceSessionStart = new Date().getTime() - userSession.startedAt.getTime();
+
+  // magic numbers: one day (24h) in milliseconds
+  if (timeSinceSessionStart > 1000 * 60 * 60 * 24) {
+    return; // session expired
+  }
+
   return userSession;
 }
