@@ -62,14 +62,53 @@ The REST API has the following use cases:
 <details>
   <summary><h3>Authenticate user</h3></summary>
 
-Coming soon...
+**URL**: `POST /v1/user/auth`
+
+**Request body**:
+
+```json
+{
+  "name": "string, max 100 characters, optional*",
+  "email": "string, valid e-mail, max 255 characters, optional*",
+  "password": "string"
+}
+```
+
+Must provide either name or email (*).
+
+**Response**:
+
+```json
+{
+  "id": "5e5f1642-f36b-4e8b-bc06-cfec569610a0",
+  "userId": "9f8f7148-c321-4f88-a402-70020404e900",
+  "startedAt": "2024-11-27T00:59:33.707Z"
+}
+```
+
+**Status codes**:
+
+- 201: successfully started user session
+- 400: session already exists, required field not provided, user does not exist or invalid credentials
+
+**Cookies**:
+
+- sessionId: `signed cookie containing session uuid`
 
 </details>
 
 <details>
   <summary><h3>Log out user</h3></summary>
 
-Coming soon...
+This route deletes the user session and clear the `sessionId` cookie.
+
+**URL**: `DELETE /v1/user/logout`
+
+**Status codes**:
+
+- 204: successfully deleted user session
+- 401: no session
+- 500: failed to delete session
 
 </details>
 
@@ -159,6 +198,10 @@ About the authentication abstraction, two options:
 
 - Turn it into a middleware/plugin
 - Make it a service and use repository instead of direct database connection
+
+About the project:
+
+- Create front end and integrate with the API
 
 ## 📝 License
 
