@@ -6,7 +6,17 @@
 
 Inspired by the article ["Stop using JWT for sessions"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/) (yes, http), here's an implementation on sessions with TypeScript, Fastify & Drizzle ORM.
 
-This repository aims to explain the **concepts of sessions** and provide a **simple implementation**.
+This repository aims to explain the **concepts of sessions** and provide a **simple implementation**, so you have a solid start point.
+
+[Jump to the concepts](#-concepts)
+
+## 🔥 Features
+
+- [x] Simple specification: create user, authenticate user, log out user and fetch users (authorization required)
+- [x] Cookie HTTP only, signed and max age set
+- [x] Session validator
+- [ ] "Keep me signed in"
+- [ ] CSRF mitigation
 
 ## 🔑 Concepts
 
