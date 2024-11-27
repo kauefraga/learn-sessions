@@ -18,10 +18,22 @@ This repository aims to explain the **concepts of sessions** and provide a **sim
 
 ## 🔑 Concepts
 
-- Cookies
-- LocalStorage and why not
+**Cookies** can be considered kind of a storage, where you put small pieces of data. In fact, cookies were used as a general client-side data storage before the modern storage APIs (session storage and local storage).
+
+> The server sends them to the user's web browser and the browser may store, create new ones, modify existing ones, and send them back to the same server with later requests.
+
+The key idea of cookies is **remember state information**, because the HTTP protocol is stateless by default.
+
+Cookies are used to store user session information, user preferences, tracking data and other data related to the site.
+
+<!-- - LocalStorage and why not
 - Sessions
-- JWT tokens and why not
+- JWT tokens and why not -->
+
+References:
+
+- [Using HTTP cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
+- [Understanding Cookies in Web Browsers](https://www.geeksforgeeks.org/understanding-cookies-in-web-browsers/)
 
 ## 📜 API specification
 
