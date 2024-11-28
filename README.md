@@ -13,6 +13,7 @@ This repository aims to explain the **concepts of sessions** and provide a **sim
 - [x] Simple specification: create user, authenticate user, log out user and fetch users (authorization required)
 - [x] Cookie HTTP only, signed and max age set
 - [x] Session validator
+- [x] Package by layer
 - [ ] "Keep me signed in"
 - [ ] CSRF mitigation
 
@@ -222,6 +223,7 @@ About the authentication abstraction, two options:
 About the project:
 
 - Create front end and integrate with the API
+- Use package by feature instead of package by layer
 
 ## 📝 License
 
