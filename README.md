@@ -63,7 +63,8 @@ The REST API has the following use cases:
   "displayName": "string, optional, max 255 characters,",
   "name": "string, max 100 characters",
   "email": "string, valid e-mail, max 255 characters",
-  "password": "string"
+  "password": "string",
+  "keepSignedIn": "boolean, optional (default: false)"
 }
 ```
 
@@ -75,6 +76,7 @@ The REST API has the following use cases:
   "displayName": null,
   "name": "test",
   "email": "test@test.test",
+  "keepSignedIn": false,
   "createdAt": "2024-11-25T01:28:35.230Z"
 }
 ```
@@ -100,7 +102,8 @@ The REST API has the following use cases:
 {
   "name": "string, max 100 characters, optional*",
   "email": "string, valid e-mail, max 255 characters, optional*",
-  "password": "string"
+  "password": "string",
+  "keepSignedIn": "boolean, optional (default: false)"
 }
 ```
 
@@ -159,6 +162,7 @@ This route deletes the user session and clear the `sessionId` cookie.
     "name": "test",
     "email": "test@test.test",
     "createdAt": "2024-11-25T01:28:35.230Z",
+    "keepSignedIn": true,
     "sessionId": null
   },
   {
@@ -167,6 +171,7 @@ This route deletes the user session and clear the `sessionId` cookie.
     "name": "ts",
     "email": "coreteam@ts.org",
     "createdAt": "2024-11-25T02:31:50.055Z",
+    "keepSignedIn": false,
     "sessionId": "45c7e6a6-a673-40fa-bcd6-d14f70788585"
   },
   // ...
