@@ -5,7 +5,7 @@ import { session } from './database/schema.js';
 
 /**
  * Check sessionId cookie and fetch user session
- * @returns session
+ * @returns user's session
  */
 export async function AuthUser(request: FastifyRequest, db: NodePgDatabase) {
   const sessionId = request.cookies.sessionId;
@@ -22,6 +22,11 @@ export async function AuthUser(request: FastifyRequest, db: NodePgDatabase) {
 
   if (!userSession) {
     return;
+  }
+
+  // keep session until the user finishes it (log out)
+  if (userSession.keepSignedIn) {
+    return userSession;
   }
 
   const timeSinceSessionStart = new Date().getTime() - userSession.startedAt.getTime();

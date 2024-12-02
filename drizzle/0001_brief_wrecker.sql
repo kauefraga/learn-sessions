@@ -1,0 +1,1 @@
+ALTER TABLE "session" ADD COLUMN "keep_signed_in" boolean DEFAULT false NOT NULL;

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -12,5 +12,6 @@ export const user = pgTable('user', {
 export const session = pgTable('session', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: uuid('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  keepSignedIn: boolean('keep_signed_in').notNull().default(false),
   startedAt: timestamp('started_at').notNull().defaultNow(),
 });
