@@ -27,14 +27,23 @@ The key idea of cookies is **remember state information**, because the HTTP prot
 
 Cookies are used to store user session information, user preferences, tracking data and other data related to the site.
 
-<!-- - LocalStorage and why not
-- Sessions
-- JWT tokens and why not -->
+The **localStorage** API is used to store client-side data (same as cookies) with the differential of having more space and not sending the data in all requests.
+
+Basically, you can persist more user data using the `localStorage` API than you would with cookies, however it's not send back to the server with later requests, you have to manually retrieve data, parse it and send.
+
+Neither user session id nor JWT tokens are recommended to be stored in `localStorage` because of the facility to access them with JavaScript. **Cookies HTTP-only** solve this issue.
+
+The **session** or user session should be created when the user create an account or log in your application. This is used to keep user authentication/authorization (and maybe more) information associated with its proper record.
+
+The HTTP protocol is stateless as mentioned before, it doesn't hold any state, so without sessions the user would need to identify itself for each action that triggers a server call (HTTP request). Sessions solve it :)
+
+To understand why not to use JWT tokens to store user session, read the article: ["Stop using JWT for sessions"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
 
 References:
 
 - [Using HTTP cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
 - [Understanding Cookies in Web Browsers](https://www.geeksforgeeks.org/understanding-cookies-in-web-browsers/)
+- [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
 
 ## 📜 API specification
 
