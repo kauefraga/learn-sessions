@@ -9,10 +9,9 @@ Inspired by the article ["Stop using JWT for sessions"](http://cryto.net/~joepie
 This repository aims to explain the **concepts of sessions** and provide a **simple implementation**, so you have a solid start point.
 
 <div align="center">
-  <video width="800" height="600" controls>
-    <source src="demo.mp4" type="video/mp4" />
-  </video>
-  <p>Testing the implementation manually</p>
+
+![Testing the implementation manually with an HTTP client](docs/demo.gif)
+
 </div>
 
 ## 🔥 Features
