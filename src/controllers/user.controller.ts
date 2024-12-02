@@ -42,6 +42,7 @@ export const UserController = defineController((http, db) => {
       .cookie('sessionId', userSession.id, {
         signed: true,
         httpOnly: true,
+        sameSite: 'strict',
         // magic numbers: one day (24h) in milliseconds
         maxAge: new Date().getTime() + 1000 * 60 * 60 * 24
       })
@@ -103,6 +104,7 @@ export const UserController = defineController((http, db) => {
       .cookie('sessionId', newSession.id, {
         signed: true,
         httpOnly: true,
+        sameSite: 'strict',
         // magic numbers: one day (24h) in milliseconds
         maxAge: new Date().getTime() + 1000 * 60 * 60 * 24
       })

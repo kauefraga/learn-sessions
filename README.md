@@ -15,7 +15,7 @@ This repository aims to explain the **concepts of sessions** and provide a **sim
 - [x] Session validator
 - [x] Package by layer
 - [x] "Keep me signed in"
-- [ ] CSRF mitigation
+- [x] CSRF mitigation (`SameSite` property)
 
 ## 🔑 Concepts
 
@@ -33,6 +33,10 @@ Basically, you can persist more user data using the `localStorage` API than you 
 
 Neither user session id nor JWT tokens are recommended to be stored in `localStorage` because of the facility to access them with JavaScript. **Cookies HTTP-only** solve this issue.
 
+Nevertheless, HTTP-only cookies are exposed to a class of vulnerability called "cross-site request forgery". In order to mitigate this problem, you can set the `SameSite` property and use anti-CSRF tokens.
+
+Be aware that any XSS vulnerability can overcome any CSRF mitigation.
+
 The **session** or user session should be created when the user create an account or log in your application. This is used to keep user authentication/authorization (and maybe more) information associated with its proper record.
 
 The HTTP protocol is stateless as mentioned before, it doesn't hold any state, so without sessions the user would need to identify itself for each action that triggers a server call (HTTP request). Sessions solve it :)
@@ -44,6 +48,7 @@ References:
 - [Using HTTP cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
 - [Understanding Cookies in Web Browsers](https://www.geeksforgeeks.org/understanding-cookies-in-web-browsers/)
 - [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+- [CSRF prevention](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/CSRF_prevention)
 
 ## 📜 API specification
 
