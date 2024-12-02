@@ -5,14 +5,15 @@ import { AuthUser } from '../auth.js';
 import { user, session } from '../database/schema.js';
 import { defineController } from '../server.js';
 
-const CreateUserSchema = z.object({
-  displayName: z.string().max(255).optional(),
-  name: z.string().max(100),
-  email: z.string().max(255).email(),
-  password: z.string(),
-});
-
 export const UserController = defineController((http, db) => {
+  const CreateUserSchema = z.object({
+    displayName: z.string().max(255).optional(),
+    name: z.string().max(100),
+    email: z.string().max(255).email(),
+    password: z.string(),
+    keepSignedIn: z.boolean().optional(),
+  });
+
   http.post('/v1/user/create', async (request, reply) => {
     const userData = CreateUserSchema.parse(request.body);
 
@@ -55,6 +56,7 @@ export const UserController = defineController((http, db) => {
     name: z.string().max(100).optional(),
     email: z.string().max(255).email().optional(),
     password: z.string(),
+    keepSignedIn: z.boolean().optional(),
   });
 
   http.post('/v1/user/auth', async (request, reply) => {
@@ -66,7 +68,7 @@ export const UserController = defineController((http, db) => {
       });
     }
 
-    const { name, email, password } = AuthUserSchema.parse(request.body);
+    const { name, email, password, keepSignedIn } = AuthUserSchema.parse(request.body);
 
     if (!(name || email)) {
       return reply.status(400).send({
@@ -94,7 +96,7 @@ export const UserController = defineController((http, db) => {
 
     const [newSession] = await db
       .insert(session)
-      .values({ userId: existingUser.id })
+      .values({ userId: existingUser.id, keepSignedIn })
       .returning();
 
     return reply
@@ -147,6 +149,7 @@ export const UserController = defineController((http, db) => {
         email: user.email,
         displayName: user.displayName,
         createdAt: user.createdAt,
+        keepSignedIn: session.keepSignedIn,
         sessionId: session.id,
       })
       .from(user)
