@@ -14,7 +14,7 @@ This repository aims to explain the **concepts of sessions** and provide a **sim
 - [x] Cookie HTTP only, signed and max age set
 - [x] Session validator
 - [x] Package by layer
-- [ ] "Keep me signed in"
+- [x] "Keep me signed in"
 - [ ] CSRF mitigation
 
 ## 🔑 Concepts
