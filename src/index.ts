@@ -7,6 +7,6 @@ const server = createServer();
 
 defineRoutes(server, db, [UserController, StatusController]);
 
-server.listen({ port: 3333 })
+server.listen({ host: '0.0.0.0', port: 3333 })
   .then(() => console.log(':> server is running at http://localhost:3333/'))
   .catch(reason => console.error('error :>', reason));

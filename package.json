@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "scripts": {
     "start": "node --env-file=.env .",
     "dev": "tsx watch --env-file=.env src/index.ts",
