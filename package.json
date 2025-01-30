@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.9.3",
+    "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.11.10",
     "drizzle-kit": "^0.28.1",
     "tsup": "^8.3.5",
@@ -24,6 +25,7 @@
     "argon2": "^0.41.1",
     "drizzle-orm": "^0.36.4",
     "fastify": "^5.1.0",
+    "nodemailer": "^6.10.0",
     "pg": "^8.13.1",
     "zod": "^3.23.8"
   }

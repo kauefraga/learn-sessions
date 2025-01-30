@@ -1,9 +1,11 @@
-import { eq } from 'drizzle-orm';
+import { eq, and, gt } from 'drizzle-orm';
 import { z } from 'zod';
 import argon2 from 'argon2';
+import nodemailer from 'nodemailer';
 import { AuthUser } from '../auth.js';
-import { user, session } from '../database/schema.js';
+import { user, session, passwordRecovery } from '../database/schema.js';
 import { defineController } from '../server.js';
+import { env } from '../env.js';
 
 export const UserController = defineController((http, db) => {
   const CreateUserSchema = z.object({
@@ -158,5 +160,145 @@ export const UserController = defineController((http, db) => {
       .leftJoin(session, eq(session.userId, user.id));
 
     return reply.send(users);
+  });
+
+  const ForgetPasswordSchema = z.object({
+    email: z.string().email(),
+  });
+
+  const transporter = nodemailer.createTransport({
+    host: 'sandbox.smtp.mailtrap.io',
+    port: 587,
+    secure: false,
+    auth: {
+      user: env.MAIL_USER,
+      pass: env.MAIL_PASSWORD,
+    }
+  });
+
+  http.post('/v1/user/forget-password', async (request, reply) => {
+    const { email } = ForgetPasswordSchema.parse(request.body);
+
+    if (!email) {
+      return reply.status(400).send({
+        message: 'You must specify a recover e-mail.'
+      });
+    }
+
+    const [userQuery] = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, email))
+      .limit(1);
+
+    if (!userQuery) {
+      return reply.status(400).send({
+        message: 'User does not exist.'
+      });
+    }
+
+    const [passwordRecoveryAttempt] = await db
+      .select()
+      .from(passwordRecovery)
+      .where(and(
+        eq(passwordRecovery.userId, userQuery.id),
+        gt(passwordRecovery.expiresAt, new Date())
+      ))
+      .limit(1);
+
+    if (passwordRecoveryAttempt) {
+      return reply.status(400).send({
+        message: 'User already attempted to recover the password. Try again in 5 minutes.'
+      });
+    }
+
+    // TODO: extract this OTP generator
+    const numbers = '0123456789';
+    let otp = '';
+    for (let i = 0; i < 6; i++) {
+      otp += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+
+    const { rowCount } = await db.insert(passwordRecovery).values({
+      userId: userQuery.id,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 5),
+      otp
+    });
+
+    if (rowCount === 0) {
+      return reply.status(500).send({
+        message: 'Failed to register password recovery attempt.'
+      });
+    }
+
+    const mailOptions = {
+      from: 'contact@learn-sessions.com',
+      to: email,
+      subject: 'Password recovery',
+      text: `Here\' is your one time password: ${otp}`
+    };
+
+    const { response } = await transporter.sendMail(mailOptions);
+
+    if (!response) {
+      return reply.status(500).send({
+        message: 'Failed to send the password recovery e-mail.'
+      });
+    }
+
+    return reply.status(200).send({
+      id: userQuery.id,
+    });
+  });
+
+  const ResetPasswordSchema = z.object({
+    id: z.string().uuid(),
+    otp: z.string().length(6),
+    newPassword: z.string(),
+  });
+
+  http.post('/v1/user/reset-password', async (request, reply) => {
+    const { id, otp, newPassword } = ResetPasswordSchema.parse(request.body);
+
+    const [passwordRecoveryAttempt] = await db
+      .select()
+      .from(passwordRecovery)
+      .where(and(
+        eq(passwordRecovery.userId, id),
+        gt(passwordRecovery.expiresAt, new Date())
+      ))
+      .limit(1);
+
+    if (!passwordRecoveryAttempt) {
+      return reply.status(400).send({
+        message: 'User does not attempted to recover the password or the request expired.'
+      });
+    }
+
+    if (passwordRecoveryAttempt.otp !== otp) {
+      return reply.status(402).send({
+        message: 'The OTP does not match.'
+      });
+    }
+
+    await db
+      .update(user)
+      .set({
+        password: await argon2.hash(newPassword)
+      })
+      .where(eq(user.id, id));
+
+    await db
+      .delete(passwordRecovery)
+      .where(eq(passwordRecovery.id, passwordRecoveryAttempt.id));
+
+    const [newUserSession] = await db
+      .insert(session)
+      .values({
+        userId: id,
+      })
+      .returning();
+
+    return reply.status(200).send(newUserSession);
   });
 });
