@@ -163,7 +163,7 @@ export const UserController = defineController((http, db) => {
   });
 
   const ForgetPasswordSchema = z.object({
-    email: z.string().email(),
+    email: z.string().max(255).email(),
   });
 
   const transporter = nodemailer.createTransport({
