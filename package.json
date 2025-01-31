@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.cjs",
   "scripts": {
-    "start": "node --env-file=.env .",
+    "start": "node .",
     "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsup src/"
   },
