@@ -212,7 +212,6 @@ export const UserController = defineController((http, db) => {
       });
     }
 
-    // TODO: extract this OTP generator
     const numbers = '0123456789';
     let otp = '';
     for (let i = 0; i < 6; i++) {
@@ -299,6 +298,15 @@ export const UserController = defineController((http, db) => {
       })
       .returning();
 
-    return reply.status(200).send(newUserSession);
+    return reply
+      .cookie('sessionId', newUserSession.id, {
+        signed: true,
+        httpOnly: true,
+        sameSite: 'strict',
+        // magic numbers: one day (24h) in milliseconds
+        maxAge: new Date().getTime() + 1000 * 60 * 60 * 24
+      })
+      .status(200)
+      .send(newUserSession);
   });
 });
