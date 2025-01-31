@@ -16,7 +16,7 @@ This repository aims to explain the **concepts of sessions** and provide a **sim
 
 ## 🔥 Features
 
-- [x] Simple specification: create user, authenticate user, log out user and fetch users (authorization required)
+- [x] Simple API specification
 - [x] Cookie HTTP only, signed and max age set
 - [x] Session validator
 - [x] Package by layer
@@ -193,6 +193,71 @@ This route deletes the user session and clear the `sessionId` cookie.
 
 - 200: successfully authorized to see other users
 - 401: invalid session, unauthorized
+
+</details>
+
+<details>
+  <summary><h3>Forget password</h3></summary>
+
+**URL**: `POST /v1/user/forget-password`
+
+**Request body**:
+
+```json
+{
+  "email": "string, valid e-mail, max 255 characters,",
+}
+```
+
+**Response**:
+
+```json
+{
+  "id": "a9bd9d92-fb05-4938-956c-98b9228bdea2"
+}
+```
+
+**Status codes**:
+
+- 200: successfully sent OTP e-mail
+- 400: user does not exist or user already attempted to recover the password
+- 500: internally failed
+
+</details>
+
+<details>
+  <summary><h3>Reset password</h3></summary>
+
+**URL**: `POST /v1/user/reset-password`
+
+**Request body**:
+
+```json
+{
+  "id": "string, valid uuid",
+  "otp": "string, 6 characters long",
+  "newPassword": "string",
+}
+```
+
+**Response**:
+
+```json
+{
+  "id": "5e5f1642-f36b-4e8b-bc06-cfec569610a0",
+  "userId": "9f8f7148-c321-4f88-a402-70020404e900",
+  "startedAt": "2024-11-27T00:59:33.707Z"
+}
+```
+
+**Status codes**:
+
+- 201: successfully reset user password
+- 400: the OTP does not match, user does not attempted to recover the password or the request expired.
+
+**Cookies**:
+
+- sessionId: `signed cookie containing session uuid`
 
 </details>
 
